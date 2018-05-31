@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Grid, Button } from 'semantic-ui-react';
+import cuid from 'cuid';
 import EventList from '../EventList/EventList';
 import EventFrom from '../EventForm/EventFrom';
 
@@ -68,6 +69,13 @@ class EventDashboard extends Component {
     this.setState({ isOpen: false });
   };
 
+  handleCreateEvent = newEvent => {
+    newEvent.id = cuid();
+    newEvent.hostPhotoURL = '/assets/user.png';
+    const updatedEvents = [...this.state.events, newEvent];
+    this.setState({ isOpen: false, events: updatedEvents });
+  };
+
   render() {
     const { events, isOpen } = this.state;
     return (
@@ -81,7 +89,12 @@ class EventDashboard extends Component {
             content="Create Event"
             onClick={this.handleFormOpen}
           />
-          {isOpen && <EventFrom handleCancel={this.handleCancel} />}
+          {isOpen && (
+            <EventFrom
+              handleCancel={this.handleCancel}
+              handleCreateEvent={this.handleCreateEvent}
+            />
+          )}
         </Grid.Column>
       </Grid>
     );

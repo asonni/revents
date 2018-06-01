@@ -5,13 +5,15 @@ const initialState = {
   data: 50
 };
 
-export const incrementCounter = (state, payload) => {
-  return { ...state, data: state.data + 1 };
-};
+export const incrementCounter = (state, payload) => ({
+  ...state,
+  data: state.data + 1
+});
 
-export const decrementCounter = (state, payload) => {
-  return { ...state, data: state.data - 1 };
-};
+export const decrementCounter = (state, payload) => ({
+  ...state,
+  data: state.data - 1
+});
 
 // const testReducer = (state = initialState, action) => {
 //   switch (action.type) {

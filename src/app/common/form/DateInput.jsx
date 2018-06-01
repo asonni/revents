@@ -1,0 +1,33 @@
+import React from 'react';
+import { Form, Label } from 'semantic-ui-react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
+
+const DateInput = ({
+  width,
+  placeholder,
+  meta: { touched, error },
+  input: { value, onChange, ...restInput },
+  ...rest
+}) => {
+  return (
+    <Form.Field error={touched && !!error} width={width}>
+      <DatePicker
+        {...rest}
+        onChange={onChange}
+        placeholderText={placeholder}
+        selected={value ? moment(value) : null}
+        {...restInput}
+      />
+      {touched &&
+        error && (
+          <Label basic color="red">
+            {error}
+          </Label>
+        )}
+    </Form.Field>
+  );
+};
+
+export default DateInput;

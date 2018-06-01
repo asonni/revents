@@ -5,12 +5,12 @@ const initialState = {
   data: 50
 };
 
-export const incrementCounter = (state, payload) => ({
+const incrementCounter = (state, payload) => ({
   ...state,
   data: state.data + 1
 });
 
-export const decrementCounter = (state, payload) => ({
+const decrementCounter = (state, payload) => ({
   ...state,
   data: state.data - 1
 });

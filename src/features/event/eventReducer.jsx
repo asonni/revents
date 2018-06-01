@@ -52,17 +52,17 @@ const initialState = [
   }
 ];
 
-export const createEvent = (state, payload) => [
+const createEvent = (state, payload) => [
   ...state,
   Object.assign({}, payload.event)
 ];
 
-export const updateEvent = (state, payload) => [
+const updateEvent = (state, payload) => [
   ...state.filter(event => event.id !== payload.event.id),
   Object.assign({}, payload.event)
 ];
 
-export const deleteEvent = (state, payload) => [
+const deleteEvent = (state, payload) => [
   ...state.filter(event => event.id !== payload.eventId)
 ];
 

@@ -1,6 +1,9 @@
+/*global google*/
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, Field } from 'redux-form';
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
+import Script from 'react-load-script';
 import moment from 'moment';
 import {
   composeValidators,
@@ -15,6 +18,7 @@ import TextInput from '../../../app/common/form/TextInput';
 import TextArea from '../../../app/common/form/TextArea';
 import SelectInput from '../../../app/common/form/SelectInput';
 import DateInput from '../../../app/common/form/DateInput';
+import PlaceInput from '../../../app/common/form/PlaceInput';
 
 const category = [
   { key: 'drinks', text: 'Drinks', value: 'drinks' },
@@ -26,8 +30,31 @@ const category = [
 ];
 
 class EventFrom extends Component {
+  state = {
+    cityLatLng: {},
+    venueLatLng: {},
+    scriptLoaded: false
+  };
+
+  handleScriptLoad = () => this.setState({ scriptLoaded: true });
+
+  handelCitySelect = async selectedCity => {
+    const results = await geocodeByAddress(selectedCity);
+    const cityLatLng = await getLatLng(results[0]);
+    this.setState({ cityLatLng });
+    this.props.change('city', selectedCity);
+  };
+
+  handelVenueSelect = async selectedVenue => {
+    const results = await geocodeByAddress(selectedVenue);
+    const venueLatLng = await getLatLng(results[0]);
+    this.setState({ venueLatLng });
+    this.props.change('venue', selectedVenue);
+  };
+
   onFormSubmit = values => {
     values.date = moment(values.date).format();
+    values.venueLatLng = this.state.venueLatLng;
     if (this.props.initialValues.id) {
       this.props.updateEvent(values);
       this.props.history.goBack();
@@ -47,6 +74,10 @@ class EventFrom extends Component {
     const { handleSubmit, invalid, submitting, pristine } = this.props;
     return (
       <Grid centered>
+        <Script
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAllMG3hm9LTR8qTXtPO-iqqOlDb-nxEWs&libraries=places"
+          onLoad={this.handleScriptLoad}
+        />
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
@@ -75,15 +106,25 @@ class EventFrom extends Component {
               <Field
                 name="city"
                 type="text"
-                component={TextInput}
+                component={PlaceInput}
                 placeholder="Event City"
+                onSelect={this.handelCitySelect}
+                options={{ types: ['(cities)'] }}
               />
-              <Field
-                type="text"
-                name="venue"
-                component={TextInput}
-                placeholder="Event Venue"
-              />
+              {this.state.scriptLoaded && (
+                <Field
+                  type="text"
+                  name="venue"
+                  component={PlaceInput}
+                  placeholder="Event Venue"
+                  onSelect={this.handelVenueSelect}
+                  options={{
+                    location: new google.maps.LatLng(this.state.cityLatLng),
+                    radius: 1000,
+                    types: ['establishment']
+                  }}
+                />
+              )}
               <Field
                 name="date"
                 showTimeSelect

@@ -6,7 +6,7 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng
 } from 'react-places-autocomplete';
-import { incrementCounter, decrementCounter } from './testActions';
+import { incrementAsync, decrementAsync } from './testActions';
 import { openModal } from '../modals/modalActions';
 
 class TestComponent extends Component {
@@ -35,7 +35,13 @@ class TestComponent extends Component {
   onChange = address => this.setState({ address });
 
   render() {
-    const { data, incrementCounter, decrementCounter, openModal } = this.props;
+    const {
+      data,
+      loading,
+      openModal,
+      incrementAsync,
+      decrementAsync
+    } = this.props;
     const inputProps = {
       value: this.state.address,
       onChange: this.onChange
@@ -43,17 +49,29 @@ class TestComponent extends Component {
     return (
       <div>
         <Script
-          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAllMG3hm9LTR8qTXtPO-iqqOlDb-nxEWs&libraries=places"
           onLoad={this.handleScriptLoad}
+          url="https://maps.googleapis.com/maps/api/js?key=AIzaSyAllMG3hm9LTR8qTXtPO-iqqOlDb-nxEWs&libraries=places"
         />
         <h1>Test Area</h1>
         <h3>The answer is: {data}</h3>
-        <Button onClick={incrementCounter} color="green" content="Increment" />
-        <Button onClick={decrementCounter} color="red" content="Decrement" />
         <Button
-          onClick={() => openModal('TestModal', { data: 43 })}
+          color="green"
+          loading={loading}
+          disabled={loading}
+          content="Increment"
+          onClick={incrementAsync}
+        />
+        <Button
+          color="red"
+          loading={loading}
+          disabled={loading}
+          content="Decrement"
+          onClick={decrementAsync}
+        />
+        <Button
           color="teal"
           content="Open Modal"
+          onClick={() => openModal('TestModal', { data: 43 })}
         />
         <br />
         <br />
@@ -75,13 +93,17 @@ class TestComponent extends Component {
 }
 
 const mapStateToProps = state => ({
-  data: state.test.data
+  data: state.test.data,
+  loading: state.test.loading
 });
 
 const actions = {
-  incrementCounter,
-  decrementCounter,
+  incrementAsync,
+  decrementAsync,
   openModal
 };
 
-export default connect(mapStateToProps, actions)(TestComponent);
+export default connect(
+  mapStateToProps,
+  actions
+)(TestComponent);

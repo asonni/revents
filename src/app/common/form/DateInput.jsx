@@ -8,14 +8,18 @@ const DateInput = ({
   width,
   placeholder,
   meta: { touched, error },
-  input: { value, onChange, ...restInput },
+  input: { value, onChange, onBlur, ...restInput },
   ...rest
 }) => {
+  // if (value) {
+  //   value = moment(value, 'X');
+  // }
   return (
     <Form.Field error={touched && !!error} width={width}>
       <DatePicker
         {...rest}
         onChange={onChange}
+        // onBlur={() => onBlur()}
         placeholderText={placeholder}
         selected={value ? moment(value) : null}
         {...restInput}

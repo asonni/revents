@@ -102,12 +102,8 @@ export const setMainPhoto = photo => async (
   { getFirebase }
 ) => {
   const firebase = getFirebase();
-  const user = firebase.auth().currentUser;
   try {
-    await firebase.updateProfile({
-      photoURL: photo.url
-    });
-    await user.updateProfile({
+    return await firebase.updateProfile({
       photoURL: photo.url
     });
   } catch (error) {

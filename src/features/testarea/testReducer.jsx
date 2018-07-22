@@ -11,23 +11,25 @@ const initialState = {
   loading: false
 };
 
-const incrementCounter = (state, payload) => ({
+const incrementCounter = state => ({
   ...state,
   data: state.data + 1
 });
 
-const decrementCounter = (state, payload) => ({
+const decrementCounter = state => ({
   ...state,
   data: state.data - 1
 });
 
-const counterActionStarted = (state, payload) => {
-  return { ...state, loading: true };
-};
+const counterActionStarted = state => ({
+  ...state,
+  loading: true
+});
 
-const counterActionFinished = (state, payload) => {
-  return { ...state, loading: false };
-};
+const counterActionFinished = state => ({
+  ...state,
+  loading: false
+});
 
 export default createReducer(initialState, {
   [INCREMENT_COUNTER]: incrementCounter,
